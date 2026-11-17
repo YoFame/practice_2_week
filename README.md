@@ -1,2 +1,6 @@
-# practice_2_week
-attendance control system
+## Системные требования и запуск
+- **Среда разработки:** Android Studio (актуальная версия)
+- **Android SDK:** API 35 (Android 15)
+- **Эмулятор:** Medium Phone API 36 (успешно протестирован)
+- **Язык:** Kotlin
+- **Сборка:** Gradle
