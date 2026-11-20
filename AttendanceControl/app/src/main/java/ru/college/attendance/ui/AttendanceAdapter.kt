@@ -10,21 +10,31 @@ import ru.college.attendance.R
 import ru.college.attendance.data.AttendanceStatus
 import ru.college.attendance.data.StudentEntity
 
-/** Список студентов занятия: у каждого RadioGroup со статусом. */
-class AttendanceAdapter : RecyclerView.Adapter<AttendanceAdapter.VH>() {
+class AttendanceAdapter(
+    private val onStatusChanged: () -> Unit
+) : RecyclerView.Adapter<AttendanceAdapter.VH>() {
 
     private var items: List<StudentEntity> = emptyList()
     private val statuses = mutableMapOf<Int, String>()
 
-    /** По умолчанию всем студентам выставляется «Присутствовал». */
-    fun submit(students: List<StudentEntity>) {
+    fun submit(students: List<StudentEntity>, savedStatuses: Map<Int, String>) {
         items = students
         statuses.clear()
-        students.forEach { statuses[it.id] = AttendanceStatus.PRESENT }
+        students.forEach { student ->
+            statuses[student.id] = savedStatuses[student.id] ?: AttendanceStatus.PRESENT
+        }
         notifyDataSetChanged()
+        onStatusChanged()
     }
 
     fun getStatuses(): Map<Int, String> = statuses.toMap()
+
+    fun getStatistics(): Triple<Int, Int, Int> {
+        val present = statuses.values.count { it == AttendanceStatus.PRESENT }
+        val absent = statuses.values.count { it == AttendanceStatus.ABSENT }
+        val late = statuses.values.count { it == AttendanceStatus.LATE }
+        return Triple(present, absent, late)
+    }
 
     class VH(view: View) : RecyclerView.ViewHolder(view) {
         val tvName: TextView = view.findViewById(R.id.tvName)
@@ -48,12 +58,15 @@ class AttendanceAdapter : RecyclerView.Adapter<AttendanceAdapter.VH>() {
                 else -> R.id.rbPresent
             }
         )
-        holder.rgStatus.setOnCheckedChangeListener { _, checkedId ->
-            statuses[student.id] = when (checkedId) {
+
+        holder.rgStatus.setOnCheckedChangeListener { _, newCheckedId ->
+            val newStatus = when (newCheckedId) {
                 R.id.rbAbsent -> AttendanceStatus.ABSENT
                 R.id.rbLate -> AttendanceStatus.LATE
                 else -> AttendanceStatus.PRESENT
             }
+            statuses[student.id] = newStatus
+            onStatusChanged()
         }
     }
 

@@ -19,9 +19,6 @@ interface StudentDao {
     @Query("SELECT DISTINCT groupName FROM students ORDER BY groupName")
     suspend fun getGroups(): List<String>
 
-    @Query("SELECT COUNT(*) FROM students")
-    suspend fun count(): Int
-
     @Delete
     suspend fun delete(student: StudentEntity)
 }

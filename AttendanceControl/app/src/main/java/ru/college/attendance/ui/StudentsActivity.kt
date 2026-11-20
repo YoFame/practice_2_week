@@ -58,6 +58,7 @@ class StudentsActivity : AppCompatActivity() {
                     )
                     etLast.text.clear()
                     etFirst.text.clear()
+                    etGroup.text.clear()
                     Toast.makeText(this@StudentsActivity, "Студент добавлен", Toast.LENGTH_SHORT).show()
                     refresh()
                 }
@@ -70,7 +71,7 @@ class StudentsActivity : AppCompatActivity() {
         AlertDialog.Builder(this)
             .setTitle("Удалить студента?")
             .setMessage("${student.lastName} ${student.firstName} (${student.groupName}). " +
-                "Его отметки посещаемости тоже будут удалены.")
+                    "Его отметки посещаемости тоже будут удалены.")
             .setPositiveButton("Удалить") { _, _ ->
                 lifecycleScope.launch {
                     db.studentDao().delete(student)

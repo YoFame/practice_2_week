@@ -13,6 +13,9 @@ interface AttendanceDao {
     @Query("SELECT * FROM attendance")
     suspend fun getAll(): List<AttendanceEntity>
 
-    @Query("SELECT COUNT(*) FROM attendance")
-    suspend fun count(): Int
+    @Query("SELECT * FROM attendance WHERE lessonDate = :date AND subject = :subject")
+    suspend fun getForLesson(date: String, subject: String): List<AttendanceEntity>
+
+    @Query("DELETE FROM attendance WHERE lessonDate = :date AND subject = :subject")
+    suspend fun deleteForLesson(date: String, subject: String)
 }

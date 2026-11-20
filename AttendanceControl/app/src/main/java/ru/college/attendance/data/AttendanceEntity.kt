@@ -5,11 +5,6 @@ import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
 
-/**
- * Отметка посещаемости. Занятие описывается датой и дисциплиной прямо в записи
- * (отдельная сущность Lesson не вводится). Уникальный индекс гарантирует
- * одну итоговую отметку на студента и занятие.
- */
 @Entity(
     tableName = "attendance",
     foreignKeys = [
@@ -27,6 +22,5 @@ data class AttendanceEntity(
     val studentId: Int,
     val lessonDate: String,
     val subject: String,
-    val status: String,
-    val comment: String? = null
+    val status: String
 )
